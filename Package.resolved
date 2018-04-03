@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "BiMap",
+        "repositoryURL": "https://github.com/marcusrossel/bimap",
+        "state": {
+          "branch": "master",
+          "revision": "8cc47b2372e4f0a3d7c74ff023e877c79d6bcb44",
+          "version": null
+        }
+      }
+    ]
+  },
+  "version": 1
+}
