@@ -1,0 +1,37 @@
+Find out if implementing `Table` via...
+* adjacencyList: [Vertex: Set<Edge>]
+* edges: Set<Edge>
+
+... would have a negative impact on space complexity.
+
+The benefits would be:
+* O(1) Sequence.next()
+* O(1) edges(for: Vertex) and Set<Edge> as return type
+* Replacement of `Graph.Edges` by `Set<Edge>`
+* `Graph.Table` can steal its `Iterator` from the adjacency list
+* Remove need for `BiMap` and `Graph.Table.Index`
+* Possibly simpler set algebra
+
+-==============================================================================-
+
+Rethink the edge types being classes. None of the other relevant GraphKit types
+are.
+
+-==============================================================================-
+
+Don't implement GraphKitEdge in terms of GraphKitVertex anymore.
+
+-==============================================================================-
+
+Overriding methods via constrained extensions is possible!
+
+-==============================================================================-
+
+Add convenience methods to SimpleGraph for adding edges between vertices, as
+SimpleEdge now requires an initializer `init(vertices:)`.
+
+Also add equivalent methods to graph, by using an edge generator closure
+`(Vertex, Vertex) -> Edge` instead.
+
+Perhaps implement the latter first, and simply implement the convenience methods
+as a special case of those methods.

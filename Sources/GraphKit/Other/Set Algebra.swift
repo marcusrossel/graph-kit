@@ -21,18 +21,18 @@ extension Graph.Table {
    /// reference tables and remapping indices if needed.
    internal mutating func formUnion(with other: Graph.Table) {
       // A map between colliding edge indices.
-      var indexCollisionMap: [Index: Index] = [:]
+      var idCollisionMap: [Identifier: Identifier] = [:]
       
-      // Merges the edge reference tables, and creates the index collision
+      // Merges the edge reference tables, and creates the identifier collision
       // map in the process.
-      for (edge, foreignIndex) in other.edgeIndexMap {
-         // If both tables contain the same edge, an index collision is
+      for (edge, foreignID) in other.edgeIDMap {
+         // If both tables contain the same edge, an identifier collision is
          // recorded. Otherwise the new edge is simply added to the native
-         // reference table using the foreign index.
-         if let nativeIndex = edgeIndexMap[edge] {
-            indexCollisionMap[foreignIndex] = nativeIndex
+         // reference table using the foreign identifier.
+         if let nativeID = edgeIDMap[edge] {
+            idCollisionMap[foreignID] = nativeID
          } else {
-            edgeIndexMap[foreignIndex] = edge
+            edgeIDMap[foreignID] = edge
          }
       }
       
@@ -40,8 +40,8 @@ extension Graph.Table {
       // indices to native ones.
       for (vertex, foreignIndices) in other.vertexTable {
          // Converts the colliding foreign indices to native ones.
-         let nativeIndices = foreignIndices.map { foreignIndex in
-            return indexCollisionMap[foreignIndex] ?? foreignIndex
+         let nativeIndices = foreignIndices.map { foreignID in
+            return idCollisionMap[foreignID] ?? foreignID
          }
          
          // Merges the native indices of colliding vertices with the new
@@ -68,7 +68,7 @@ extension Graph.Table {
       
       // Removes all edges from this table, that are not contained in the other
       // table.
-      for (edge, index) in edgeIndexMap {
+      for (edge, identifier) in edgeIDMap {
          // Gets the edge's vertices.
          let vertices = edge.vertices
          
@@ -77,15 +77,16 @@ extension Graph.Table {
          guard
             removedVertices.contains(vertices.0) ||
             removedVertices.contains(vertices.1) ||
-            !other.edgeIndexMap.keys.contains(edge)
+            !other.edgeIDMap.keys.contains(edge)
          else { continue }
          
          // Removes the edge from the reference table.
-         edgeIndexMap[edge] = nil
+         edgeIDMap[edge] = nil
          
-         // Removes the edge's index from both of its vertices' table entries.
-         vertexTable[vertices.0]!.remove(index)
-         vertexTable[vertices.1]!.remove(index)
+         // Removes the edge's identifier from both of its vertices' table
+         // entries.
+         vertexTable[vertices.0]!.remove(identifier)
+         vertexTable[vertices.1]!.remove(identifier)
       }
    }
    
@@ -105,19 +106,20 @@ extension Graph.Table {
       }
       
       // Removes all edges from this table, that contain a removed vertex.
-      for (edge, index) in edgeIndexMap {
+      for (edge, identifier) in edgeIDMap {
          // Gets the edge's vertices.
          let vertices = edge.vertices
          
          // Removes the edge from the reference table if either one of its
          // vertices has been removed.
          if removedVertices.contains(vertices.0) || removedVertices.contains(vertices.1) {
-            edgeIndexMap[edge] = nil
+            edgeIDMap[edge] = nil
          }
          
-         // Removes the edge's index from both of its vertices' table entries.
-         vertexTable[vertices.0]!.remove(index)
-         vertexTable[vertices.1]!.remove(index)
+         // Removes the edge's identifier from both of its vertices' table
+         // entries.
+         vertexTable[vertices.0]!.remove(identifier)
+         vertexTable[vertices.1]!.remove(identifier)
       }
    }
    
@@ -135,22 +137,22 @@ extension Graph.Table {
          if other.vertexTable.keys.contains(vertex) {
             // Removes the vertex and its edges from this table.
             vertexTable[vertex] = nil
-            associatedIndices.forEach { edgeIndexMap[$0] = nil }
+            associatedIndices.forEach { edgeIDMap[$0] = nil }
             
             // Removes the vertex and its edges from the given table.
             // Forces unrapping is used, as the vertex is known to be safe.
             let foreignIndices = other.vertexTable[vertex]!
             other.vertexTable[vertex] = nil
-            foreignIndices.forEach { other.edgeIndexMap[$0] = nil }
+            foreignIndices.forEach { other.edgeIDMap[$0] = nil }
          }
       }
       
       // Removes edges contained in both tables from both tables.
-      for edge in edgeIndexMap.keys {
-         if other.edgeIndexMap.keys.contains(edge) {
+      for edge in edgeIDMap.keys {
+         if other.edgeIDMap.keys.contains(edge) {
             // Removes the edge from both tables.
-            edgeIndexMap[edge] = nil
-            other.edgeIndexMap[edge] = nil
+            edgeIDMap[edge] = nil
+            other.edgeIDMap[edge] = nil
          }
       }
       
@@ -158,8 +160,8 @@ extension Graph.Table {
       for (vertex, associatedIndices) in other.vertexTable {
          vertexTable[vertex] = associatedIndices
       }
-      for (edge, index) in other.edgeIndexMap {
-         edgeIndexMap[edge] = index
+      for (edge, identifier) in other.edgeIDMap {
+         edgeIDMap[edge] = identifier
       }
    }
 }

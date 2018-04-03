@@ -23,7 +23,7 @@ public protocol WeightedEdge: EdgeProtocol {
 extension Edge {
 
    /// A weighted undirected subclass of `Edge`.
-   public final class Weighted<Weight>: Edge where Weight: Hashable {
+   public final class Weighted<Weight>: Edge, WeightedEdge where Weight: Hashable {
       
       /// The edge's weight.
       public private(set) var weight: Weight
@@ -34,13 +34,9 @@ extension Edge {
          super.init(first, second)
       }
       
-      // MARK: - Overridable Extensions
-      
+      /// A string description of the edge.
       public override var description: String {
          return "〚\(vertices.0)--[\(weight)]--\(vertices.1)〛"
       }
    }
 }
-
-// Protocol conformances.
-extension Edge.Weighted: WeightedEdge { }

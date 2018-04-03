@@ -39,7 +39,7 @@ extension DirectedEdge {
 extension Edge {
    
    /// An unweighted directed subclass of `Edge`.
-   public final class Directed: Edge {
+   public final class Directed: Edge, DirectedEdge {
       
       /// The edge's start-vertex.
       public private(set) var start: Vertex {
@@ -64,25 +64,27 @@ extension Edge {
       /// vice versa.
       public func reverse() { (start, end) = (end, start) }
       
-      // MARK: - Overridable Extensions
-      
+      /// A string description of the edge.
       public override var description: String {
          return "〚\(start)-->\(end)〛"
       }
    }
 }
 
-// Protocol conformances.
-extension Edge.Directed: DirectedEdge, ExpressibleByArrayLiteral {
+// MARK: - Conformances
+
+extension Edge.Directed: ExpressibleByArrayLiteral {
    
-   /// A directed edge can only be initialized from exaclty two vertices.
+   /// A directed edge can only be initialized from exaclty two values.
    /// If this condition is not met, the initializer causes a crash.
-   public convenience init(arrayLiteral elements: Vertex...) {
-      assert(elements.count == 2, "An `Edge.Directed` must be initialized from exactly two vertices.")
+   public convenience init(arrayLiteral elements: Value...) {
+      precondition(elements.count == 2, "An `Edge.Directed` must be initialized from exactly two values.")
       
+      // Creates vertices from the given values.
       // Forced unwrapping is used as `elements` is known to contain two
       // elements.
-      self.init(start: elements.first!, end: elements.last!)
+      let vertices = (Vertex(elements.first!), Vertex(elements.last!))
+      
+      self.init(start: vertices.0, end: vertices.1)
    }
 }
-

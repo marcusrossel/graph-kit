@@ -59,8 +59,8 @@ extension Graph where Edge: SimpleEdge {
                // Creates an edge between parent `currentVertex` and child
                // `adjacentVertex`.
                let searchTreeConnection: GraphKitEdge<(Vertex, Int)>.Simple = [
-                  GraphKitVertex((currentVertex, currentDistance)),
-                  GraphKitVertex((adjacentVertex, adjacentDistance))
+                  (currentVertex, currentDistance),
+                  (adjacentVertex, adjacentDistance)
                ]
                
                // Adds the adjacent vertex to the search tree.
@@ -78,6 +78,7 @@ extension Graph where Edge: SimpleEdge {
       return searchTree
    }
    
+   /*
    /// Returns a graph representing the search-tree attained from performing a
    /// depth first search starting at a given vertex.
    ///
@@ -87,5 +88,5 @@ extension Graph where Edge: SimpleEdge {
       
       return nil
    }
-   
+   */
 }

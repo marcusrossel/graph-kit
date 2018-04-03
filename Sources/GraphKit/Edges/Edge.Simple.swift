@@ -20,7 +20,7 @@ public protocol SimpleEdge: EdgeProtocol {
 extension Edge {
    
    /// An unweighted undirected edge, that can be used within a `Graph`.
-   public final class Simple: Edge {
+   public final class Simple: Edge, SimpleEdge {
       
       /// Creates an between given vertices.
       public init(vertices: (Vertex, Vertex)) {
@@ -29,16 +29,20 @@ extension Edge {
    }
 }
 
-// Protocol conformances.
-extension Edge.Simple: SimpleEdge, ExpressibleByArrayLiteral {
+// MARK: - Conformances
+
+extension Edge.Simple: ExpressibleByArrayLiteral {
    
-   /// A simple edge can only be initialized from exaclty two vertices.
+   /// A simple edge can only be initialized from exactly two values.
    /// If this condition is not met, the initializer causes a crash.
-   public convenience init(arrayLiteral elements: Vertex...) {
-      assert(elements.count == 2, "An `Edge.Simple` must be initialized from exactly two vertices.")
+   public convenience init(arrayLiteral elements: Value...) {
+      precondition(elements.count == 2, "An `Edge.Simple` must be initialized from exactly two values.")
       
+      // Creates vertices from the given values.
       // Forced unwrapping is used as `elements` is known to contain two
       // elements.
-      self.init(vertices: (elements.first!, elements.last!))
+      let vertices = (Vertex(elements.first!), Vertex(elements.last!))
+      
+      self.init(vertices: vertices)
    }
 }

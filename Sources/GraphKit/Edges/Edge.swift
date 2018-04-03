@@ -52,7 +52,7 @@ extension EdgeProtocol {
 ///
 /// `Edge`s have identity semantics, so that a graph can contain multiple
 /// between the same vertices.
-public class Edge<Value> {
+public class Edge<Value>: EdgeProtocol, IdentitySemantic, CustomStringConvertible {
    
    /// The vertex type used by `Edge`.
    public typealias Vertex = GraphKitVertex<Value>
@@ -64,19 +64,15 @@ public class Edge<Value> {
    internal init(_ first: Vertex, _ second: Vertex) {
       vertices = (first, second)
    }
-   
-   // MARK: - Overridable Extensions
-   
-   // `CustomStringConvertible` conformance.
+
+   /// A string description of the edge.
    public var description: String {
       return "〚\(vertices.0)--\(vertices.1)〛"
    }
 }
 
-// Protocol conformances.
-extension Edge: EdgeProtocol, IdentitySemantic, CustomStringConvertible { }
+// MARK: - Conditional Extensions
 
-// Additional methods when the vertex' value is equatable.
 extension Edge where Value: Equatable {
    
    /// Indicates whether either of the edge's vertices contains a given value.

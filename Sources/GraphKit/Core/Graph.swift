@@ -12,7 +12,7 @@
 /// and edges.
 /// The `VertexProtocol`, `EdgeProtocol` and their sub-protocols provide the
 /// interface for adding types to be used with `Graph`.
-public struct Graph<Edge: EdgeProtocol> {
+public struct Graph<Edge: EdgeProtocol>: Equatable {
    
    // MARK: - Type Declarations
    
@@ -25,23 +25,23 @@ public struct Graph<Edge: EdgeProtocol> {
    /// A sequence type used by `Graph` to expose its vertices.
    ///
    /// This allows for faster access of certain properties.
-   public typealias Vertices = Dictionary<Vertex, Set<Table.Index>>.Keys
+   public typealias Vertices = Dictionary<Vertex, Set<Table.Identifier>>.Keys
    
    /// A sequence type used by `Graph` to expose its edges.
    ///
    /// This allows for faster access of certain properties.
-   public typealias Edges = Dictionary<Edge, Table.Index>.Keys
+   public typealias Edges = Dictionary<Edge, Table.Identifier>.Keys
    
    // MARK: - Properties
    
-   // A custom type managing all of the vertices and edges in the graph.
+   /// A custom type managing all of the vertices and edges in the graph.
    internal var table: Table
    
    /// A sequence of all of the vertices in the graph.
    public var vertices: Vertices { return table.vertexTable.keys }
    
    /// A sequence of all of the edges in the graph.
-   public var edges: Edges { return table.edgeIndexMap.keys }
+   public var edges: Edges { return table.edgeIDMap.keys }
    
    /// Indicates whether or not the graph contains any vertices or edges.
    ///
@@ -188,10 +188,12 @@ extension Graph {
       return successfulCalls(of: Graph.insert(edge:), with: &self, on: edges)
    }
    
+   /*
    //#warning("Implement!")
    public mutating func connect(vertices: (Vertex, Vertex), by edgeGenerator: (Vertex, Vertex) -> Edge) {
       
    }
+   */
    
    /// Removes a given edge from the graph.
    ///
@@ -251,5 +253,51 @@ extension Graph {
    /// Removes all vertices and edges from the graph.
    public mutating func removeAll(keepingCapacity: Bool = false) {
       table.removeAll(keepingCapacity: keepingCapacity)
+   }
+}
+
+// MARK: - Conformances
+
+extension Graph: Sequence {
+   
+   /// The type of iterator used by `Graph` is its `Table`.
+   public typealias Iterator = Table
+   
+   /// A graph`s iterator is its `Table`.
+   public func makeIterator() -> Graph<Edge>.Table { return table }
+}
+
+extension Graph: Collection {
+   
+   /// The type used by a `Graph` to index it as a collection.
+   public typealias Index = Table.Index
+   
+   /// The graph's start index.
+   public var startIndex: Index { return table.startIndex }
+   
+   /// The graph's end index.
+   public var endIndex: Index { return table.endIndex }
+   
+   /// Returns the element at a given index.
+   public subscript(position: Index) -> Iterator.Element {
+      return table[position]
+   }
+   
+   /// Returns the index after a given index.
+   public func index(after index: Index) -> Index {
+      return table.index(after: index)
+   }
+}
+
+extension Graph: ExpressibleByArrayLiteral where Graph.Vertex: InitializableVertex {
+   
+   /// The type of element expected when initializing a `Graph` from an array
+   /// literal.
+   public typealias ArrayLiteralElement = Value
+   
+   /// When initializing a graph from an array literal, its elements are viewed
+   /// as values. The `init(fromValues:)` intializer is called for those values.
+   public init(arrayLiteral values: Value...) {
+      self.init(fromValues: values)
    }
 }
