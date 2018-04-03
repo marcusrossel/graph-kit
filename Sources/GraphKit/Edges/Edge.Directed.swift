@@ -73,18 +73,27 @@ extension Edge {
 
 // MARK: - Conformances
 
-extension Edge.Directed: ExpressibleByArrayLiteral {
+extension Edge.Directed: ExpressibleByArrayLiteral
+where Vertex: InitializableVertex {
+   
+   /// The type of element used when initializing an `Edge.Simple` from an array
+   /// literal.
+   public typealias ArrayLiteralElement = Edge.Value
    
    /// A directed edge can only be initialized from exaclty two values.
    /// If this condition is not met, the initializer causes a crash.
-   public convenience init(arrayLiteral elements: Value...) {
-      precondition(elements.count == 2, "An `Edge.Directed` must be initialized from exactly two values.")
+   public convenience init(arrayLiteral elements: Edge.Value...) {
+      precondition(
+         elements.count == 2,
+         "An `Edge.Directed` must be initialized from exactly two values."
+      )
       
       // Creates vertices from the given values.
       // Forced unwrapping is used as `elements` is known to contain two
       // elements.
-      let vertices = (Vertex(elements.first!), Vertex(elements.last!))
+      let first = Vertex(value: elements.first!)
+      let second = Vertex(value: elements.last!)
       
-      self.init(start: vertices.0, end: vertices.1)
+      self.init(start: first, end: second)
    }
 }

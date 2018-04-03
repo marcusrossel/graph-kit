@@ -7,7 +7,8 @@
 //
 
 /// A `Graph` that uses `Edge.Weighted`s
-public typealias WeightedGraph<Value, Weight> = Graph<Edge<Value>.Weighted<Weight>> where Weight: Hashable
+public typealias WeightedGraph<Vertex, Weight> = Graph<Edge<Vertex>.Weighted<Weight>>
+where Vertex: VertexProtocol, Weight: Hashable
 
 extension Graph where Edge: WeightedEdge {
    

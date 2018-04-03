@@ -37,7 +37,10 @@ public typealias GraphKitEdge = Edge
 // MARK: - Methods
 
 /// Turns a mutating method on a given `Type` into a non-mutating version.
-internal func nonMutating<Type, Input, Output>(_ unboundMethod: @escaping (inout Type) -> (Input) -> Output, for instance: Type) -> (Input) -> Type {
+internal func nonMutating<Type, Input, Output>(
+   _ unboundMethod: @escaping (inout Type) -> (Input) -> Output,
+   for instance: Type
+) -> (Input) -> Type {
    // Creates a copy of the instance.
    var copy = instance
    
@@ -56,11 +59,13 @@ internal func nonMutating<Type, Input, Output>(_ unboundMethod: @escaping (inout
 /// reports on success or failure.
 ///
 /// Returns the number of calls that returned `true`.
-internal func successfulCalls<Type, S>(of unboundMethod: (inout Type) -> (S.Element) -> Bool, with instance: inout Type, on sequence: S) -> Int
-   where S: Sequence {
-      let boundMethod = unboundMethod(&instance)
-      
-      return sequence.reduce(0) { successCounter, element in
-         return successCounter + (boundMethod(element) ? 1 : 0)
-      }
+internal func successfulCalls<Type, S: Sequence>(
+   of unboundMethod: (inout Type) -> (S.Element) -> Bool,
+   with instance: inout Type, on sequence: S
+) -> Int {
+   let boundMethod = unboundMethod(&instance)
+   
+   return sequence.reduce(0) { successCounter, element in
+      return successCounter + (boundMethod(element) ? 1 : 0)
+   }
 }

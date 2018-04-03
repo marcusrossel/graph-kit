@@ -6,12 +6,6 @@
 //  Copyright © 2018 Marcus Rossel. All rights reserved.
 //
 
-/* Important:
- 
- `Keys`/`Values` `.contains` is O(1)
- 
- */
-
 // MARK: - Table
 
 extension Graph.Table {

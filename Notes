@@ -19,11 +19,12 @@ are.
 
 -==============================================================================-
 
-Don't implement GraphKitEdge in terms of GraphKitVertex anymore.
+Determine how the search tree resulting from BFS and DFS should be represented.
 
 -==============================================================================-
 
 Overriding methods via constrained extensions is possible!
+Dictionary.Keys/Values.contains is O(1)!
 
 -==============================================================================-
 

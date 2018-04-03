@@ -52,10 +52,11 @@ extension EdgeProtocol {
 ///
 /// `Edge`s have identity semantics, so that a graph can contain multiple
 /// between the same vertices.
-public class Edge<Value>: EdgeProtocol, IdentitySemantic, CustomStringConvertible {
+public class Edge<Vertex>: EdgeProtocol, IdentitySemantic, CustomStringConvertible
+where Vertex: VertexProtocol {
    
-   /// The vertex type used by `Edge`.
-   public typealias Vertex = GraphKitVertex<Value>
+   /// The type of value contained in the edge's vertices.
+   public typealias Value = Vertex.Value
    
    /// The edge's vertices.
    public internal(set) var vertices: (Vertex, Vertex)
@@ -73,7 +74,7 @@ public class Edge<Value>: EdgeProtocol, IdentitySemantic, CustomStringConvertibl
 
 // MARK: - Conditional Extensions
 
-extension Edge where Value: Equatable {
+extension Edge where Edge.Value: Equatable {
    
    /// Indicates whether either of the edge's vertices contains a given value.
    public func isIncidentToVertex(withValue value: Value) -> Bool {

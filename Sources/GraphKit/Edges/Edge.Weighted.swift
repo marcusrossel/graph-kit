@@ -18,7 +18,7 @@ public protocol WeightedEdge: EdgeProtocol {
    var weight: Weight { get }
 }
 
-// MARK: - Class
+// MARK: - Type
 
 extension Edge {
 
