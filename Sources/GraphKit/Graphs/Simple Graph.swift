@@ -1,5 +1,5 @@
 //
-//  SimpleGraph.swift
+//  Simple Graph.swift
 //  GraphKit
 //
 //  Created by Marcus Rossel on 23.02.18.

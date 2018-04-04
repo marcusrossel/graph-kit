@@ -61,7 +61,8 @@ internal func nonMutating<Type, Input, Output>(
 /// Returns the number of calls that returned `true`.
 internal func successfulCalls<Type, S: Sequence>(
    of unboundMethod: (inout Type) -> (S.Element) -> Bool,
-   with instance: inout Type, on sequence: S
+   with instance: inout Type,
+   on sequence: S
 ) -> Int {
    let boundMethod = unboundMethod(&instance)
    

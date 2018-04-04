@@ -245,7 +245,7 @@ extension Graph {
    
    /// Returns the edges connected to the vertex in the graph.
    /// If the vertex is not part of the graph `nil` is returned.
-   public func edges(for vertex: Vertex) -> [Edge]? {
+   public func edges(incidentTo vertex: Vertex) -> [Edge]? {
       guard vertices.contains(vertex) else { return nil }
       return table.edges(forSafe: vertex)
    }

@@ -79,7 +79,8 @@ extension Graph {
          // Maps all of the given vertex' edges to the vertices that are not the
          // given one.
          return edges(forSafe: safeVertex).map { edge in
-            (edge.vertices.0 != safeVertex) ? edge.vertices.0 : edge.vertices.1
+            // Forced unwrapping is used as the edge is assured to be safe.
+            edge.incidentVertex(thatIsNot: safeVertex)!
          }
       }
       

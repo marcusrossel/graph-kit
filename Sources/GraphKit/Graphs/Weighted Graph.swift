@@ -1,5 +1,5 @@
 //
-//  WeightedGraph.swift
+//  Weighted Graph.swift
 //  GraphKit
 //
 //  Created by Marcus Rossel on 11.03.18.

@@ -28,6 +28,13 @@ public protocol EdgeProtocol: Hashable {
 // Default implementations.
 extension EdgeProtocol {
    
+   /// Returns the vertex from the edge, that is not the given vertex.
+   /// If the edge does not contain the given vertex, `nil` is returned.
+   public func incidentVertex(thatIsNot vertex: Vertex) -> Vertex? {
+      guard isIncident(to: vertex) else { return nil }
+      return (vertices.0 == vertex) ? vertices.1 : vertices.0
+   }
+   
    /// Indicates whether the given vertex is one of the edge's endpoints.
    public func isIncident(to vertex: Vertex) -> Bool {
       return vertices.0 == vertex || vertices.1 == vertex

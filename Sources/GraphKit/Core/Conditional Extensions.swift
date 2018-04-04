@@ -42,19 +42,19 @@ extension Graph where Graph.Value: Equatable {
    /// Returns all of the vertices in the graph with given values.
    /// If any value has no corresponding vertex in the graph, `nil` is returned.
    public func vertices<S>(withValues values: S) -> Set<Vertex>?
-      where S: Sequence, S.Element == Value {
-         var verticesWithValues: Set<Vertex> = []
+   where S: Sequence, S.Element == Value {
+      var verticesWithValues: Set<Vertex> = []
+      
+      for value in values {
+         let verticesWithValue = vertices.filter { $0.value == value }
          
-         for value in values {
-            let verticesWithValue = vertices.filter { $0.value == value }
-            
-            // Checks if any vertex was found for the given value, and aborts the
-            // procedure if not.
-            guard !verticesWithValue.isEmpty else { return nil }
-            verticesWithValues.formUnion(verticesWithValue)
-         }
-         
-         return verticesWithValues
+         // Checks if any vertex was found for the given value, and aborts the
+         // procedure if not.
+         guard !verticesWithValue.isEmpty else { return nil }
+         verticesWithValues.formUnion(verticesWithValue)
+      }
+      
+      return verticesWithValues
    }
    
    /// Removes all of the vertices with given values.
@@ -65,19 +65,19 @@ extension Graph where Graph.Value: Equatable {
    /// and `nil` is returned.
    @discardableResult
    public mutating func removeVertices<S>(withValues values: S) -> (vertices: Int, edges: Int)?
-      where S: Sequence, S.Element == Value {
-         // Gets the relevant vertices.
-         guard let verticesWithValues = vertices(withValues: values) else { return nil }
-         
-         // Removes the vertices, and gets the number of edges that were removed as
-         // a result.
-         //#warning("Duplicate A.")
-         //#warning("Create a method in `Table` to optimize for this.")
-         let numberOfRemovedEdges = verticesWithValues.reduce(0) { sum, vertex in
-            return sum + table.remove(safeVertex: vertex)
-         }
-         
-         return (vertices.count, numberOfRemovedEdges)
+   where S: Sequence, S.Element == Value {
+      // Gets the relevant vertices.
+      guard let verticesWithValues = vertices(withValues: values) else { return nil }
+      
+      // Removes the vertices, and gets the number of edges that were removed as
+      // a result.
+      //#warning("Duplicate A.")
+      //#warning("Create a method in `Table` to optimize for this.")
+      let numberOfRemovedEdges = verticesWithValues.reduce(0) { sum, vertex in
+         return sum + table.remove(safeVertex: vertex)
+      }
+      
+      return (vertices.count, numberOfRemovedEdges)
    }
    
    /// Removes edges between all of the vertices with given values.
@@ -87,19 +87,19 @@ extension Graph where Graph.Value: Equatable {
    /// and `nil` is returned.
    @discardableResult
    public mutating func removeEdgesBetweenVertices<S>(withValues values: S) -> Int?
-      where S: Sequence, S.Element == Value {
-         // Gets the relevant vertices.
-         guard let verticesWithValues = vertices(withValues: values) else {
-            return nil
-         }
-         
-         //#warning("Brute force.")
-         // Gets all of the edges to be removed.
-         let relevantEdges = Set(verticesWithValues.flatMap(table.edges(forSafe:)))
-         // Removes the relevant edges.
-         relevantEdges.forEach { edge in table.remove(safeEdge: edge) }
-         
-         // Returns the number of edges that were removed.
-         return relevantEdges.count
+   where S: Sequence, S.Element == Value {
+      // Gets the relevant vertices.
+      guard let verticesWithValues = vertices(withValues: values) else {
+         return nil
+      }
+      
+      //#warning("Brute force.")
+      // Gets all of the edges to be removed.
+      let relevantEdges = Set(verticesWithValues.flatMap(table.edges(forSafe:)))
+      // Removes the relevant edges.
+      relevantEdges.forEach { edge in table.remove(safeEdge: edge) }
+      
+      // Returns the number of edges that were removed.
+      return relevantEdges.count
    }
 }

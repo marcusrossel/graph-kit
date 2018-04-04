@@ -16,6 +16,13 @@ The benefits would be:
 
 Rethink the edge types being classes. None of the other relevant GraphKit types
 are.
+Perhaps use an enum `Edge` for namespacing and still implement the types inside,
+but this time as structs.
+
+-==============================================================================-
+
+Conform to SetAlgebra:
+https://developer.apple.com/documentation/swift/setalgebra
 
 -==============================================================================-
 
@@ -31,7 +38,7 @@ Dictionary.Keys/Values.contains is O(1)!
 Add convenience methods to SimpleGraph for adding edges between vertices, as
 SimpleEdge now requires an initializer `init(vertices:)`.
 
-Also add equivalent methods to graph, by using an edge generator closure
+Also add equivalent methods to Graph, by using an edge generator closure
 `(Vertex, Vertex) -> Edge` instead.
 
 Perhaps implement the latter first, and simply implement the convenience methods

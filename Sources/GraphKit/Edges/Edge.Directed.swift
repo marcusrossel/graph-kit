@@ -62,7 +62,7 @@ extension Edge {
       
       /// Changes the direction of the edge, by making its `start` its `end` and
       /// vice versa.
-      public func reverse() { (start, end) = (end, start) }
+      public func invert() { (start, end) = (end, start) }
       
       /// A string description of the edge.
       public override var description: String {
