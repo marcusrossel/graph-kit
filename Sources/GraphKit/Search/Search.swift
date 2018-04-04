@@ -83,7 +83,7 @@ extension Graph {
                
                // Creates an edge between parent `currentVertex` and child
                // `adjacentVertex`.
-               let searchTreeConnection: GraphKitEdge<GraphKitVertex<(Vertex, Int)>>.Simple = [
+               let searchTreeConnection: GraphKitEdge.Simple<GraphKitVertex<(Vertex, Int)>> = [
                   (currentVertex, currentDistance),
                   (adjacentVertex, adjacentDistance)
                ]

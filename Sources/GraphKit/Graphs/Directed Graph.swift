@@ -7,7 +7,7 @@
 //
 
 /// A `Graph` that uses `Edge.Directed`s
-public typealias DirectedGraph<Vertex> = Graph<Edge<Vertex>.Directed>
+public typealias DirectedGraph<Vertex> = Graph<Edge.Directed<Vertex>>
 where Vertex: VertexProtocol
 
 extension Graph where Edge: DirectedEdge {

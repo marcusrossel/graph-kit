@@ -14,13 +14,6 @@ The benefits would be:
 
 -==============================================================================-
 
-Rethink the edge types being classes. None of the other relevant GraphKit types
-are.
-Perhaps use an enum `Edge` for namespacing and still implement the types inside,
-but this time as structs.
-
--==============================================================================-
-
 Conform to SetAlgebra:
 https://developer.apple.com/documentation/swift/setalgebra
 

@@ -39,50 +39,49 @@ extension DirectedEdge {
 extension Edge {
    
    /// An unweighted directed subclass of `Edge`.
-   public final class Directed: Edge, DirectedEdge {
+   public struct Directed<Vertex>: DirectedEdge, Equatable, Hashable
+   where Vertex: VertexProtocol {
       
       /// The edge's start-vertex.
-      public private(set) var start: Vertex {
-         get { return vertices.0 }
-         set { vertices.0 = newValue }
-      }
+      public private(set) var start: Vertex
       
       /// The edge's end-vertex.
-      public private(set) var end: Vertex {
-         get { return vertices.1 }
-         set { vertices.1 = newValue }
-      }
+      public private(set) var end: Vertex
+      
+      /// The edge's vertices.
+      public var vertices: (Vertex, Vertex) { return (start, end) }
       
       /// Creates an instance with the given vertices.
       public init(start: Vertex, end: Vertex) {
-         super.init(start, end)
-         self.start = start
-         self.end = end
+         (self.start, self.end) = (start, end)
       }
       
       /// Changes the direction of the edge, by making its `start` its `end` and
       /// vice versa.
-      public func invert() { (start, end) = (end, start) }
-      
-      /// A string description of the edge.
-      public override var description: String {
-         return "〚\(start)-->\(end)〛"
-      }
+      public mutating func invert() { (start, end) = (end, start) }
    }
 }
 
 // MARK: - Conformances
+
+extension Edge.Directed: CustomStringConvertible {
+   
+   /// A string description of the edge.
+   public var description: String {
+      return "〚\(start)-->\(end)〛"
+   }
+}
 
 extension Edge.Directed: ExpressibleByArrayLiteral
 where Vertex: InitializableVertex {
    
    /// The type of element used when initializing an `Edge.Simple` from an array
    /// literal.
-   public typealias ArrayLiteralElement = Edge.Value
+   public typealias ArrayLiteralElement = Vertex.Value
    
    /// A directed edge can only be initialized from exaclty two values.
    /// If this condition is not met, the initializer causes a crash.
-   public convenience init(arrayLiteral elements: Edge.Value...) {
+   public init(arrayLiteral elements: Vertex.Value...) {
       precondition(
          elements.count == 2,
          "An `Edge.Directed` must be initialized from exactly two values."

@@ -23,20 +23,43 @@ public protocol WeightedEdge: EdgeProtocol {
 extension Edge {
 
    /// A weighted undirected subclass of `Edge`.
-   public final class Weighted<Weight>: Edge, WeightedEdge where Weight: Hashable {
+   public struct Weighted<Vertex, Weight>: WeightedEdge
+   where Vertex: VertexProtocol, Weight: Hashable {
+      
+      /// The edge's vertices.
+      public var vertices: (Vertex, Vertex)
       
       /// The edge's weight.
       public private(set) var weight: Weight
       
       /// Creates an instance with the given vertices.
       public init(_ first: Vertex, _ second: Vertex, weight: Weight) {
+         vertices = (first, second)
          self.weight = weight
-         super.init(first, second)
       }
-      
-      /// A string description of the edge.
-      public override var description: String {
-         return "〚\(vertices.0)--[\(weight)]--\(vertices.1)〛"
-      }
+   }
+}
+
+extension Edge.Weighted: Equatable, Hashable {
+   
+   // `Edge.Weighted`s are considered equal iff they contain the same vertices
+   // and weight.
+   public static func == (lhs: Edge.Weighted<Vertex, Weight>, rhs: Edge.Weighted<Vertex, Weight>) -> Bool {
+      return lhs.weight == rhs.weight &&
+             (lhs.vertices == rhs.vertices ||
+             lhs.vertices == (rhs.vertices.1, rhs.vertices.0))
+   }
+   
+   public var hashValue: Int {
+      //#warning("Ad hoc hash function.")
+      return vertices.0.hashValue ^ vertices.1.hashValue
+   }
+}
+
+extension Edge.Weighted: CustomStringConvertible {
+   
+   /// A string description of the edge.
+   public var description: String {
+      return "〚\(vertices.0)--[\(weight)]--\(vertices.1)〛"
    }
 }

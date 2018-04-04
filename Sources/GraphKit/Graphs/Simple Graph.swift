@@ -7,7 +7,7 @@
 //
 
 /// A `Graph` that uses `Edge.Simple`s
-public typealias SimpleGraph<Vertex> = Graph<Edge<Vertex>.Simple>
+public typealias SimpleGraph<Vertex> = Graph<Edge.Simple<Vertex>>
 where Vertex: VertexProtocol
 
 extension Graph where Edge: SimpleEdge {
