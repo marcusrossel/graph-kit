@@ -27,7 +27,7 @@ extension Graph {
    //     - the edge is part of the table
    //
    /// The type used by `Graph` to manage storage of its edges and vertices.
-   public struct Table: Equatable {
+   public struct Table {
       
       // MARK: - Type Declarations
       
@@ -63,7 +63,7 @@ extension Graph {
       /// Returns the edges for a given safe vertex.
       ///
       /// Complexity: O(vertex.degree)
-      internal func edges(forSafe safeVertex: Vertex) -> [Edge] {
+      internal func edges(incidentToSafe safeVertex: Vertex) -> [Edge] {
          // Forced unwrapping is used as the vertex is assured to be safe.
          return vertexTable[safeVertex]!.map { identifier in
             // Forced unwrapping is used as the identifier must have a
@@ -78,7 +78,7 @@ extension Graph {
       internal func adjacentVertices(forSafe safeVertex: Vertex) -> [Vertex] {
          // Maps all of the given vertex' edges to the vertices that are not the
          // given one.
-         return edges(forSafe: safeVertex).map { edge in
+         return edges(incidentToSafe: safeVertex).map { edge in
             // Forced unwrapping is used as the edge is assured to be safe.
             edge.incidentVertex(thatIsNot: safeVertex)!
          }
@@ -204,6 +204,16 @@ extension Graph {
 
 // MARK: - Conformances
 
+extension Graph.Table: Equatable {
+   
+   /// `Graph.Table`s are considered equal iff they contain the same vertices
+   /// and edges.
+   public static func ==(lhs: Graph.Table, rhs: Graph.Table) -> Bool {
+      return lhs.vertexTable.keys == rhs.vertexTable.keys &&
+             lhs.edgeIDMap.keys == rhs.edgeIDMap.keys
+   }
+}
+
 extension Graph.Table: IteratorProtocol, Sequence {
    
    /// The type of element when iterating over a graph-table.
@@ -216,12 +226,12 @@ extension Graph.Table: IteratorProtocol, Sequence {
    public mutating func next() -> (Graph.Vertex, Set<Edge>)? {
       // Gets the vertex-table entry for some vertex. If there are none, `nil`
       // is returned.
-      guard let (vertex, identifiers) = vertexTable.first else { return nil }
+      guard let (vertex, associatedIDs) = vertexTable.first else { return nil }
       
       // Maps the vertex's associated identifiers to their edges.
       // Forced unwrapping is used as the identifier must have a corresponding
       // edge.
-      let edges = Set(identifiers.map { id in edgeIDMap[id]! })
+      let edges = Set(associatedIDs.map { id in edgeIDMap[id]! })
       
       return (vertex, edges)
    }
@@ -242,11 +252,19 @@ extension Graph.Table: Collection {
    /// Complexity: O(1)
    public var endIndex: Index { return vertexTable.endIndex }
    
+   //#warning("This is not O(1)!")
    /// Returns the element at a given index.
    ///
-   /// Complexity: O(1)
+   /// Complexity: O(returnValue.1.count)
    public subscript(position: Index) -> Element {
-      return vertexTable[position]
+      let (vertex, associatedIDs) = vertexTable[position]
+      
+      // Maps the vertex's associated identifiers to their edges.
+      // Forced unwrapping is used as the identifier must have a corresponding
+      // edge.
+      let edges = Set(associatedIDs.map { id in edgeIDMap[id]! })
+      
+      return (vertex, edges)
    }
    
    /// Returns the index after a given index.

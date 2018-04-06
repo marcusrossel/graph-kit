@@ -247,7 +247,7 @@ extension Graph {
    /// If the vertex is not part of the graph `nil` is returned.
    public func edges(incidentTo vertex: Vertex) -> [Edge]? {
       guard vertices.contains(vertex) else { return nil }
-      return table.edges(forSafe: vertex)
+      return table.edges(incidentToSafe: vertex)
    }
    
    /// Removes all vertices and edges from the graph.

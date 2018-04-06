@@ -95,7 +95,7 @@ extension Graph where Graph.Value: Equatable {
       
       //#warning("Brute force.")
       // Gets all of the edges to be removed.
-      let relevantEdges = Set(verticesWithValues.flatMap(table.edges(forSafe:)))
+      let relevantEdges = Set(verticesWithValues.flatMap(table.edges(incidentToSafe:)))
       // Removes the relevant edges.
       relevantEdges.forEach { edge in table.remove(safeEdge: edge) }
       
